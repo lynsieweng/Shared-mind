@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Long Table — a place to think together</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Newsreader:ital,opsz@0,6..72;1,6..72&display=swap');
+
+  :root {
+    --ink: #1c1a17;
+    --ink-soft: #5a554d;
+    --ink-faint: #908a7e;
+    --paper: #f3efe6;
+    --paper-raised: #fbf9f3;
+    --line: #ddd6c7;
+    --accent: #6b4f2e;       /* walnut */
+    --accent-soft: #b08a5a;
+    --seoul: #7a5c9e;        /* his marker */
+    --home: #3d6b5a;         /* her marker */
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 22px 120px; }
+
+  /* ---- masthead ---- */
+  header.masthead {
+    padding: 64px 0 30px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .eyebrow {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+    margin: 0 0 10px;
+  }
+  h1.title {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(38px, 8vw, 60px);
+    line-height: 1.02;
+    margin: 0;
+    letter-spacing: -0.015em;
+  }
+  .subtitle {
+    font-style: italic;
+    color: var(--ink-soft);
+    margin: 14px 0 0;
+    font-size: 18px;
+  }
+  .who {
+    margin: 22px 0 0;
+    font-size: 14px;
+    color: var(--ink-faint);
+    display: flex; gap: 22px; justify-content: center; align-items: center;
+    font-family: 'Newsreader', serif;
+  }
+  .who .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 7px; vertical-align: 1px; }
+  .dot.home { background: var(--home); }
+  .dot.seoul { background: var(--seoul); }
+
+  /* ---- identity bar ---- */
+  .identity {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    margin: 22px 0 0; font-size: 14px; color: var(--ink-soft);
+  }
+  .identity button {
+    font-family: 'Newsreader', serif; font-size: 14px;
+    background: transparent; border: 1px solid var(--line);
+    padding: 5px 14px; border-radius: 40px; cursor: pointer; color: var(--ink-soft);
+    transition: all .15s;
+  }
+  .identity button.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .identity button:hover { border-color: var(--ink-soft); }
+
+  /* ---- new topic ---- */
+  .new-topic {
+    margin: 40px 0 10px;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+  }
+  .new-topic h2 {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 20px;
+    margin: 0 0 14px; letter-spacing: -0.01em;
+  }
+  input, textarea {
+    width: 100%; font-family: 'Newsreader', serif; font-size: 17px;
+    background: #fff; border: 1px solid var(--line); border-radius: 7px;
+    padding: 11px 13px; color: var(--ink); resize: vertical; line-height: 1.5;
+  }
+  input:focus, textarea:focus { outline: none; border-color: var(--accent-soft); box-shadow: 0 0 0 3px rgba(176,138,90,0.15); }
+  input::placeholder, textarea::placeholder { color: var(--ink-faint); font-style: italic; }
+  .field-label { font-size: 13px; color: var(--ink-soft); margin: 0 0 5px; font-style: italic; }
+  .row { margin-bottom: 12px; }
+
+  button.primary {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 16px;
+    background: var(--ink); color: var(--paper); border: none;
+    padding: 10px 22px; border-radius: 40px; cursor: pointer; transition: opacity .15s;
+  }
+  button.primary:hover { opacity: 0.85; }
+  button.primary:disabled { opacity: 0.4; cursor: default; }
+
+  /* ---- topics ---- */
+  .section-rule {
+    display: flex; align-items: center; gap: 14px; margin: 48px 0 6px;
+  }
+  .section-rule h2 {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 15px;
+    text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-soft); margin: 0; white-space: nowrap;
+  }
+  .section-rule .ln { flex: 1; height: 1px; background: var(--line); }
+
+  .topic {
+    border-bottom: 1px solid var(--line);
+    padding: 28px 0;
+  }
+  .topic-head { cursor: pointer; }
+  .topic-q {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 25px;
+    line-height: 1.18; margin: 0 0 7px; letter-spacing: -0.01em; color: var(--ink);
+  }
+  .topic-meta { font-size: 13.5px; color: var(--ink-faint); font-style: italic; display: flex; gap: 14px; flex-wrap: wrap; }
+  .topic-prompt { color: var(--ink-soft); margin: 11px 0 0; font-size: 17.5px; }
+  .topic-toggle { font-size: 13px; color: var(--accent); font-style: normal; margin-top: 10px; display: inline-block; }
+
+  /* ---- thread ---- */
+  .thread { margin: 22px 0 4px; padding-left: 4px; }
+  .post {
+    border-left: 3px solid var(--line);
+    padding: 4px 0 4px 18px; margin: 0 0 22px;
+  }
+  .post.home { border-left-color: var(--home); }
+  .post.seoul { border-left-color: var(--seoul); }
+  .post-author { font-family: 'Fraunces', serif; font-weight: 600; font-size: 14px; letter-spacing: 0.02em; }
+  .post.home .post-author { color: var(--home); }
+  .post.seoul .post-author { color: var(--seoul); }
+  .post-time { font-size: 12.5px; color: var(--ink-faint); font-style: italic; margin-left: 8px; }
+  .post-body { margin: 5px 0 0; white-space: pre-wrap; font-size: 18px; }
+
+  .reply-box { margin: 8px 0 0 4px; }
+  .reply-box textarea { font-size: 17px; }
+  .reply-actions { display: flex; gap: 10px; align-items: center; margin-top: 9px; }
+  .reply-hint { font-size: 13px; color: var(--ink-faint); font-style: italic; }
+
+  .empty-thread { color: var(--ink-faint); font-style: italic; font-size: 16px; padding: 4px 0 0 18px; }
+
+  .empty-all {
+    text-align: center; padding: 50px 20px; color: var(--ink-faint); font-style: italic; font-size: 18px;
+  }
+
+  .status { text-align: center; font-size: 13px; color: var(--ink-faint); font-style: italic; padding: 18px 0 0; }
+
+  footer { text-align: center; margin-top: 60px; padding-top: 26px; border-top: 1px solid var(--line); color: var(--ink-faint); font-style: italic; font-size: 14px; }
+
+  .tiny-link { background: none; border: none; color: var(--ink-faint); font-family: 'Newsreader', serif; font-style: italic; font-size: 12.5px; cursor: pointer; text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">a place to keep thinking together, across the distance</p>
+    <h1 class="title">The Long Table</h1>
+    <p class="subtitle">where a question is set down, and two minds answer it in their own time</p>
+    <div class="who">
+      <span><span class="dot home"></span>her</span>
+      <span><span class="dot seoul"></span>him</span>
+    </div>
+    <div class="identity" id="identity">
+      <span>writing as</span>
+      <button data-who="home" class="active">her</button>
+      <button data-who="seoul">him</button>
+    </div>
+  </header>
+
+  <section class="new-topic">
+    <h2>Set a new question on the table</h2>
+    <div class="row">
+      <p class="field-label">the question — the thing worth circling</p>
+      <input id="t-title" type="text" placeholder="e.g. Should a society pay everyone a universal basic income?" maxlength="200" />
+    </div>
+    <div class="row">
+      <p class="field-label">a little context, if you want (optional)</p>
+      <textarea id="t-prompt" rows="2" placeholder="Why it's on your mind — what you read, what's being debated in Seoul right now, where you're unsure…"></textarea>
+    </div>
+    <button class="primary" id="add-topic">Lay it down</button>
+  </section>
+
+  <div class="section-rule"><h2>Open questions</h2><div class="ln"></div></div>
+
+  <div id="topics"></div>
+
+  <p class="status" id="status">…</p>
+
+  <footer>
+    Everything written here is kept.<br />
+    Started in June, for August and whatever comes after.
+  </footer>
+</div>
+
+<script>
+const STORE_KEY = 'longtable:v1';
+let me = 'home';
+let state = { topics: [] };
+let openTopics = {};
+
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const niceName = w => w === 'seoul' ? 'him' : 'her';
+
+function relTime(ts) {
+  const d = new Date(ts), now = new Date();
+  const diff = (now - d) / 1000;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff/60) + ' min ago';
+  if (diff < 86400) return Math.floor(diff/3600) + ' h ago';
+  const opts = { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' };
+  return d.toLocaleDateString(undefined, opts);
+}
+
+async function load() {
+  try {
+    const res = await window.storage.get(STORE_KEY);
+    if (res && res.value) state = JSON.parse(res.value);
+  } catch (e) {
+    state = { topics: [] };
+  }
+  if (!state.topics) state.topics = [];
+  render();
+  setStatus();
+}
+
+async function save() {
+  try {
+    await window.storage.set(STORE_KEY, JSON.stringify(state));
+    setStatus();
+  } catch (e) {
+    $('status').textContent = 'Could not save just now — your last note may not be kept. Try again in a moment.';
+  }
+}
+
+function setStatus() {
+  const n = state.topics.length;
+  const posts = state.topics.reduce((a,t)=>a+t.posts.length,0);
+  $('status').innerHTML = n === 0 ? '' :
+    `${n} question${n>1?'s':''} on the table · ${posts} thought${posts!==1?'s':''} so far`;
+}
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+async function addTopic() {
+  const title = $('t-title').value.trim();
+  const prompt = $('t-prompt').value.trim();
+  if (!title) { $('t-title').focus(); return; }
+  const topic = { id: uid(), title, prompt, by: me, created: Date.now(), posts: [] };
+  state.topics.unshift(topic);
+  openTopics[topic.id] = true;
+  $('t-title').value = ''; $('t-prompt').value = '';
+  render(); await save();
+}
+
+async function addPost(topicId, text) {
+  const t = state.topics.find(x => x.id === topicId);
+  if (!t || !text.trim()) return;
+  t.posts.push({ id: uid(), by: me, body: text.trim(), at: Date.now() });
+  render(); await save();
+}
+
+function toggle(id) { openTopics[id] = !openTopics[id]; render(); }
+
+function render() {
+  const host = $('topics');
+  if (state.topics.length === 0) {
+    host.innerHTML = `<div class="empty-all">No questions yet.<br/>The table is set — lay the first one down.</div>`;
+    return;
+  }
+  host.innerHTML = state.topics.map(t => {
+    const open = openTopics[t.id];
+    const threadHtml = open ? renderThread(t) : '';
+    return `
+      <div class="topic">
+        <div class="topic-head" onclick="toggle('${t.id}')">
+          <p class="topic-q">${esc(t.title)}</p>
+          <div class="topic-meta">
+            <span>set by ${niceName(t.by)}</span>
+            <span>${relTime(t.created)}</span>
+            <span>${t.posts.length} thought${t.posts.length!==1?'s':''}</span>
+          </div>
+          ${t.prompt ? `<p class="topic-prompt">${esc(t.prompt)}</p>` : ''}
+          <span class="topic-toggle">${open ? '— close' : '+ open the discussion'}</span>
+        </div>
+        ${threadHtml}
+      </div>`;
+  }).join('');
+}
+
+function renderThread(t) {
+  const posts = t.posts.map(p => `
+    <div class="post ${p.by}">
+      <span class="post-author">${niceName(p.by)}</span>
+      <span class="post-time">${relTime(p.at)}</span>
+      <p class="post-body">${esc(p.body)}</p>
+    </div>`).join('');
+  const emptyMsg = t.posts.length === 0 ? `<p class="empty-thread">No thoughts yet — open the conversation.</p>` : '';
+  return `
+    <div class="thread">
+      ${posts}${emptyMsg}
+      <div class="reply-box">
+        <textarea id="reply-${t.id}" rows="3" placeholder="Add your thinking, as ${niceName(me)}…"></textarea>
+        <div class="reply-actions">
+          <button class="primary" onclick="submitReply('${t.id}')">Add thought</button>
+          <span class="reply-hint">writing as <strong>${niceName(me)}</strong></span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function submitReply(topicId) {
+  const ta = $('reply-' + topicId);
+  if (ta && ta.value.trim()) addPost(topicId, ta.value);
+}
+
+$('add-topic').addEventListener('click', addTopic);
+$('identity').querySelectorAll('button').forEach(b => {
+  b.addEventListener('click', () => {
+    me = b.dataset.who;
+    $('identity').querySelectorAll('button').forEach(x => x.classList.toggle('active', x===b));
+    render();
+  });
+});
+
+load();
+</script>
+</body>
+</html>
